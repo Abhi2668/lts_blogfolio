@@ -79,7 +79,7 @@ const components: PortableTextComponents = {
   },
 };
 
-export default async function BlogPostPage({ params }: PageProps) {
+async function BlogPostPage({ params }: PageProps) {
   const post: BlogPost | null = await sanity.fetch(
     `*[_type == "blog" && slug.current == $slug][0]{
       title,
@@ -178,3 +178,5 @@ export default async function BlogPostPage({ params }: PageProps) {
     </article>
   );
 }
+
+export default BlogPostPage;
