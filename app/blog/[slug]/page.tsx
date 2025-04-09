@@ -7,12 +7,6 @@ import {
 import { notFound } from "next/navigation";
 import { format } from "date-fns";
 
-type PageProps = {
-  params: {
-    slug: string;
-  };
-};
-
 type BlogPost = {
   title: string;
   date: string;
@@ -51,10 +45,7 @@ const components: PortableTextComponents = {
   types: {
     image: ({ value }) => {
       const url = value?.asset?._ref
-        ?.replace(
-          "image-",
-          "https://cdn.sanity.io/images/3t26pmqp/production/"
-        )
+        ?.replace("image-", "https://cdn.sanity.io/images/3t26pmqp/production/")
         ?.replace(/-(\d+x\d+)-\w+$/, ".$1.webp");
 
       return url ? (
@@ -79,7 +70,11 @@ const components: PortableTextComponents = {
   },
 };
 
-async function BlogPostPage({ params }: PageProps) {
+async function BlogPostPage({
+  params,
+}: {
+  params: { slug: string };
+}) {
   const post: BlogPost | null = await sanity.fetch(
     `*[_type == "blog" && slug.current == $slug][0]{
       title,
@@ -100,7 +95,6 @@ async function BlogPostPage({ params }: PageProps) {
 
   return (
     <article className="max-w-2xl mx-auto px-6 py-20">
-      {/* Cover Image */}
       {post.img?.asset?.url && (
         <img
           src={post.img.asset.url}
@@ -109,7 +103,6 @@ async function BlogPostPage({ params }: PageProps) {
         />
       )}
 
-      {/* Title & Meta */}
       <h1 className="text-3xl font-bold mb-2">{post.title}</h1>
       <p className="text-gray-500 dark:text-gray-400 text-sm mb-2">
         {format(new Date(post.date), "MMMM d, yyyy")}
@@ -117,7 +110,6 @@ async function BlogPostPage({ params }: PageProps) {
         {post.readingTime && ` · ${post.readingTime}`}
       </p>
 
-      {/* Tags */}
       {Array.isArray(post.tags) && post.tags.length > 0 && (
         <ul className="flex flex-wrap gap-2 mb-6">
           {post.tags.map((tag) => (
@@ -131,14 +123,12 @@ async function BlogPostPage({ params }: PageProps) {
         </ul>
       )}
 
-      {/* Rich Body */}
       {post.body && (
         <div className="prose dark:prose-invert">
           <PortableText value={post.body} components={components} />
         </div>
       )}
 
-      {/* Image Gallery */}
       {Array.isArray(post.images) && post.images.length > 0 && (
         <div className="my-12 grid gap-4 sm:grid-cols-2">
           {post.images.map(
@@ -155,26 +145,20 @@ async function BlogPostPage({ params }: PageProps) {
         </div>
       )}
 
-      {/* External Links */}
-      {Array.isArray(post.externalLinks) &&
-        post.externalLinks.length > 0 && (
-          <div className="mt-8">
-            <h3 className="text-lg font-semibold mb-2">Related Links</h3>
-            <ul className="list-disc list-inside text-blue-600 dark:text-blue-400">
-              {post.externalLinks.map((link) => (
-                <li key={link.url}>
-                  <a
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+      {Array.isArray(post.externalLinks) && post.externalLinks.length > 0 && (
+        <div className="mt-8">
+          <h3 className="text-lg font-semibold mb-2">Related Links</h3>
+          <ul className="list-disc list-inside text-blue-600 dark:text-blue-400">
+            {post.externalLinks.map((link) => (
+              <li key={link.url}>
+                <a href={link.url} target="_blank" rel="noopener noreferrer">
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </article>
   );
 }
