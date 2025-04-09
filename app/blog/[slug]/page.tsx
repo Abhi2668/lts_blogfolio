@@ -1,5 +1,5 @@
 import { sanity } from "@/utilities/sanity";
-import { PortableText, PortableTextComponents } from "@portabletext/react";
+import { PortableText, PortableTextBlock, PortableTextComponents } from "@portabletext/react";
 import { notFound } from "next/navigation";
 import { format } from "date-fns";
 
@@ -16,7 +16,7 @@ type BlogPost = {
       url: string;
     };
   };
-  body: any;
+  body: PortableTextBlock[];
   images?: {
     asset: {
       _id: string;

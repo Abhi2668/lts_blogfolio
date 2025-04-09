@@ -1,12 +1,12 @@
 import { sanity } from "@/utilities/sanity";
-import { PortableText, PortableTextComponents } from "@portabletext/react";
+import { PortableText, PortableTextComponents, PortableTextBlock} from "@portabletext/react";
 import { notFound } from "next/navigation";
 
 type Project = {
   title: string;
   description: string;
   tech: string[];
-  body: any;
+  body: PortableTextBlock[];
   img?: {
     asset: {
       _id: string;
