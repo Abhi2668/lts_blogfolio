@@ -57,11 +57,8 @@ const components: PortableTextComponents = {
   },
 };
 
-export default async function ProjectPage({
-  params,
-}: {
-  params: { slug: string };
-}) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function ProjectPage({ params }: any) {
   const project: Project | null = await sanity.fetch(
     `*[_type == "project" && slug.current == $slug][0]{
       title,
