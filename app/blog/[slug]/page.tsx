@@ -70,11 +70,8 @@ const components: PortableTextComponents = {
   },
 };
 
-async function BlogPostPage({
-  params,
-}: {
-  params: { slug: string };
-}) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function BlogPostPage({ params }: any) {
   const post: BlogPost | null = await sanity.fetch(
     `*[_type == "blog" && slug.current == $slug][0]{
       title,
