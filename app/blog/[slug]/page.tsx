@@ -1,7 +1,17 @@
 import { sanity } from "@/utilities/sanity";
-import { PortableText, PortableTextBlock, PortableTextComponents } from "@portabletext/react";
+import {
+  PortableText,
+  PortableTextBlock,
+  PortableTextComponents,
+} from "@portabletext/react";
 import { notFound } from "next/navigation";
 import { format } from "date-fns";
+
+type PageProps = {
+  params: {
+    slug: string;
+  };
+};
 
 type BlogPost = {
   title: string;
@@ -41,7 +51,10 @@ const components: PortableTextComponents = {
   types: {
     image: ({ value }) => {
       const url = value?.asset?._ref
-        ?.replace("image-", "https://cdn.sanity.io/images/3t26pmqp/production/")
+        ?.replace(
+          "image-",
+          "https://cdn.sanity.io/images/3t26pmqp/production/"
+        )
         ?.replace(/-(\d+x\d+)-\w+$/, ".$1.webp");
 
       return url ? (
@@ -66,11 +79,7 @@ const components: PortableTextComponents = {
   },
 };
 
-export default async function BlogPostPage({
-  params,
-}: {
-  params: { slug: string };
-}) {
+export default async function BlogPostPage({ params }: PageProps) {
   const post: BlogPost | null = await sanity.fetch(
     `*[_type == "blog" && slug.current == $slug][0]{
       title,
@@ -147,20 +156,25 @@ export default async function BlogPostPage({
       )}
 
       {/* External Links */}
-      {Array.isArray(post.externalLinks) && post.externalLinks.length > 0 && (
-        <div className="mt-8">
-          <h3 className="text-lg font-semibold mb-2">Related Links</h3>
-          <ul className="list-disc list-inside text-blue-600 dark:text-blue-400">
-            {post.externalLinks.map((link) => (
-              <li key={link.url}>
-                <a href={link.url} target="_blank" rel="noopener noreferrer">
-                  {link.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      {Array.isArray(post.externalLinks) &&
+        post.externalLinks.length > 0 && (
+          <div className="mt-8">
+            <h3 className="text-lg font-semibold mb-2">Related Links</h3>
+            <ul className="list-disc list-inside text-blue-600 dark:text-blue-400">
+              {post.externalLinks.map((link) => (
+                <li key={link.url}>
+                  <a
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
     </article>
   );
 }
