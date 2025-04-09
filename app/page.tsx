@@ -30,6 +30,13 @@ export default function Home() {
         >
           Contact
         </a>
+
+        <a
+            href="/blog"
+            className="border border-blue-600 text-blue-600 px-6 py-3 rounded-full text-sm font-medium hover:bg-blue-50 dark:hover:bg-blue-900 transition"
+            >
+            Blog
+            </a>
       </div>
     </section>
   );
