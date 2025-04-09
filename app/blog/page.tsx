@@ -2,6 +2,8 @@ import { sanity } from "@/utilities/sanity";
 import Link from "next/link";
 import { format } from "date-fns";
 
+export const dynamic = "force-dynamic";
+
 type BlogPost = {
   _id: string;
   title: string;

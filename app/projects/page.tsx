@@ -1,6 +1,10 @@
 import { sanity } from "@/utilities/sanity";
 import Link from "next/link";
 
+
+export const dynamic = "force-dynamic";
+
+
 type Project = {
   _id: string;
   title: string;
