@@ -24,3 +24,21 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+body {
+  background: #f4efe7;
+  color: #3e3e2d;
+  font-family: var(--font-sans);
+}
+
+.blinking-cursor {
+  font-weight: 400;
+  color: #6b8e4e;
+  animation: blink 1s step-start infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
