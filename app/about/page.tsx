@@ -9,7 +9,7 @@ export default function AboutPage() {
       title: "Site Reliability Engineer Intern",
       company: "Flock Safety",
       location: "Atlanta, GA",
-      period: "June 2024 - August 2024",
+      period: "June 2025 - August 2025",
       description: "Enhanced system reliability and monitoring infrastructure for public safety technology platform serving 5000+ communities.",
       achievements: [
         "Improved system monitoring and alerting capabilities",
@@ -17,30 +17,6 @@ export default function AboutPage() {
         "Worked with cloud technologies and DevOps practices"
       ]
     },
-    {
-      title: "Undergraduate Teaching Assistant",
-      company: "Georgia Institute of Technology",
-      location: "Atlanta, GA", 
-      period: "August 2023 - December 2023",
-      description: "Teaching assistant for CS 1332 - Data Structures and Algorithms, helping students master fundamental computer science concepts.",
-      achievements: [
-        "Assisted 200+ students with data structures and algorithms concepts",
-        "Led recitation sessions and provided code review feedback",
-        "Mentored students in problem-solving and debugging techniques"
-      ]
-    },
-    {
-      title: "Software Engineering Intern",
-      company: "Flock Safety",
-      location: "Atlanta, GA",
-      period: "May 2023 - August 2023",
-      description: "Developed and maintained software solutions for public safety technology platform.",
-      achievements: [
-        "Built scalable web applications using modern technologies",
-        "Collaborated with cross-functional teams on feature development",
-        "Contributed to code quality and testing best practices"
-      ]
-    }
   ];
 
   const skills = {
@@ -119,7 +95,7 @@ export default function AboutPage() {
             </div>
             <div className="flex items-center gap-2">
               <FaLinkedin className="text-[#6b8e4e]" />
-              <a href="https://linkedin.com/in/avinod34" target="_blank" className="hover:text-[#6b8e4e] transition-colors">
+              <a href="https://linkedin.com/in/abhinav-vinod" target="_blank" className="hover:text-[#6b8e4e] transition-colors">
                 LinkedIn
               </a>
             </div>
