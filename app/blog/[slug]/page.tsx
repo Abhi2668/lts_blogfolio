@@ -286,24 +286,24 @@ async function BlogPostPage({ params }: any) {
         </article>
 
         {/* Footer */}
-        <footer className="max-w-3xl mx-auto pt-12 mt-12 border-t border-gray-200">
+        <footer className="max-w-3xl mx-auto pt-12 mt-12 border-t border-[#3e3e2d]/20">
           <div className="text-center">
-            <h3 className="text-2xl font-semibold text-gray-900 mb-4">
-              Thanks for reading!
+            <h3 className="text-2xl font-medium text-[#3e3e2d] mb-4">
+              Thanks for Reading!
             </h3>
-            <p className="text-gray-600 mb-8">
+            <p className="text-[#3e3e2d]/70 mb-8">
               Have thoughts or questions? I'd love to hear from you.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <a
                 href="mailto:vinodabhinav54@gmail.com"
-                className="inline-flex items-center px-6 py-3 bg-gray-900 text-white rounded-lg font-medium hover:bg-gray-800 transition-colors duration-200"
+                className="inline-flex items-center px-6 py-3 bg-[#3e3e2d] text-[#f4efe7] rounded-lg hover:bg-[#3e3e2d]/90 transition-colors duration-200"
               >
-                Get In Touch
+                Get in Touch
               </a>
               <Link
                 href="/blog"
-                className="inline-flex items-center px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors duration-200"
+                className="inline-flex items-center px-6 py-3 border border-[#3e3e2d]/30 text-[#3e3e2d] rounded-lg hover:bg-[#3e3e2d]/5 transition-colors duration-200"
               >
                 More Posts
               </Link>
