@@ -9,7 +9,7 @@ import { HiOutlineCode, HiOutlineAcademicCap, HiOutlineLightBulb } from "react-i
 export default function Home() {
   const [typed, setTyped] = useState("");
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
-  const words = ["Hi, I'm Abhi", "Software Engineer", "Georgia Tech Student", "Site Reliability Engineer", "Data Visualization Enthusiast"];
+  const words = ["Hi, I'm Abhi", "Software Engineer", "MSCS Georgia Tech Student", "Site Reliability Engineer", "Data Visualization Enthusiast", "IoT Enthusiast"];
   
   useEffect(() => {
     const word = words[currentWordIndex];
@@ -47,14 +47,14 @@ export default function Home() {
     {
       degree: "Master of Science in Computer Science",
       institution: "Georgia Institute of Technology, Atlanta, GA",
-      year: "Expected 2025",
+      year: "December 2025",
       focus: "Computing Systems"
     },
     {
       degree: "Bachelor of Science in Computer Science",
       institution: "Georgia Institute of Technology, Atlanta, GA",
-      year: "2024",
-      focus: "Computer Science concentration in Artificial Intelligence and Computer Media."
+      year: "May 2024",
+      focus: "Artificial Intelligence and Computer Media."
     }
   ];
 
@@ -103,7 +103,7 @@ export default function Home() {
             </div>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span>@ Flock Safety Summer 2025</span>
+              <span>@Georgia Tech</span>
             </div>
             <div className="flex items-center gap-2">
               <FaClock className="text-[#6b8e4e]" />
