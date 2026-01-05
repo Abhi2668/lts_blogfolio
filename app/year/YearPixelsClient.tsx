@@ -240,8 +240,7 @@ export default function YearPixelsClient({ initialLogs, currentYear }: YearPixel
   };
 
   function parseLocalDate(dateStr: string): Date {
-    const [year, month, day] = dateStr.split('-').map(Number);
-    return new Date(year, month - 1, day);
+    return new Date(dateStr + 'T12:00:00-05:00');
   }
 
   return (
