@@ -128,6 +128,117 @@ export default function YearPixelsClient({ initialLogs, currentYear }: YearPixel
     setShowOnlyWithImages(false);
   };
 
+  // Generate month labels for heatmap
+  const generateMonthLabels = () => {
+    const labels: React.ReactNode[] = [];
+    let currentMonth = -1;
+    
+    const yearStart = new Date(currentYear, 0, 1);
+    const firstSunday = new Date(yearStart);
+    firstSunday.setDate(yearStart.getDate() - yearStart.getDay());
+    
+    for (let weekIdx = 0; weekIdx < 53; weekIdx++) {
+      const weekDate = new Date(firstSunday);
+      weekDate.setDate(firstSunday.getDate() + weekIdx * 7);
+      
+      const month = weekDate.getMonth();
+      const year = weekDate.getFullYear();
+      
+      if (year === currentYear && month !== currentMonth) {
+        labels.push(
+          <div key={weekIdx} className="text-xs font-medium text-[#5c5c4a]" style={{ width: '13px' }}>
+            {monthNames[month].substring(0, 3)}
+          </div>
+        );
+        currentMonth = month;
+      } else {
+        labels.push(<div key={weekIdx} style={{ width: '13px' }}></div>);
+      }
+    }
+    
+    return labels;
+  };
+
+  // Generate heatmap weeks
+  const generateHeatmapWeeks = () => {
+    const weeks: React.ReactNode[] = [];
+    const yearStart = new Date(currentYear, 0, 1);
+    const firstSunday = new Date(yearStart);
+    firstSunday.setDate(yearStart.getDate() - yearStart.getDay());
+    
+    for (let weekIdx = 0; weekIdx < 53; weekIdx++) {
+      const days: React.ReactNode[] = [];
+      
+      for (let dayIdx = 0; dayIdx < 7; dayIdx++) {
+        const date = new Date(firstSunday);
+        date.setDate(firstSunday.getDate() + weekIdx * 7 + dayIdx);
+        
+        // Skip if not in current year
+        if (date.getFullYear() !== currentYear) {
+          days.push(<div key={dayIdx} className="w-3 h-3"></div>);
+          continue;
+        }
+        
+        const dateStr = date.toISOString().split('T')[0];
+        const log = allLogsByDate.get(dateStr);
+        const isInFiltered = logsByDate.has(dateStr);
+        const bgColor = log?.color || '#e5e7eb';
+        const isFiltered = log && !isInFiltered;
+        const dayNum = date.getDate();
+        const monthName = monthNames[date.getMonth()];
+        
+        days.push(
+          <div key={dayIdx} className="group relative">
+            <div
+              className={`w-3 h-3 rounded-sm cursor-pointer transition-all ${
+                isFiltered 
+                  ? 'opacity-20' 
+                  : log 
+                  ? 'hover:ring-2 hover:ring-[#6b8e4e] hover:scale-125 hover:z-20' 
+                  : 'border border-[#d8c4a6] hover:border-[#b8a890]'
+              }`}
+              style={{ backgroundColor: bgColor }}
+            ></div>
+            
+            {/* Tooltip */}
+            {!isFiltered && (
+              <div className="invisible group-hover:visible absolute z-50 left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-2 bg-[#3e3e2d] text-white text-xs rounded-lg shadow-xl whitespace-nowrap pointer-events-none">
+                <div className="font-bold">{monthName} {dayNum}, {currentYear}</div>
+                {log ? (
+                  <>
+                    <div className="font-semibold mt-1" style={{ color: log.color }}>
+                      {COLOR_LABELS[log.color]}
+                    </div>
+                    {log.mood && <div className="text-gray-300 mt-1 italic">&quot;{log.mood}&quot;</div>}
+                    {log.tags && log.tags.length > 0 && (
+                      <div className="mt-1 text-gray-300 text-[10px]">
+                        {log.tags.map(tag => `#${tag}`).join(' ')}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="text-gray-400 mt-1">No entry</div>
+                )}
+                {/* Arrow */}
+                <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-px">
+                  <div className="w-2 h-2 bg-[#3e3e2d] rotate-45"></div>
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      }
+      
+      weeks.push(
+        <div key={weekIdx} className="flex flex-col gap-1">
+          {days}
+        </div>
+      );
+    }
+    
+    return weeks;
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
@@ -479,118 +590,12 @@ export default function YearPixelsClient({ initialLogs, currentYear }: YearPixel
                   <div>
                     {/* Month labels */}
                     <div className="flex mb-1 h-5">
-                      {(() => {
-                        const labels: JSX.Element[] = [];
-                        let currentMonth = -1;
-                        
-                        // Calculate weeks for the year
-                        const yearStart = new Date(currentYear, 0, 1);
-                        const firstSunday = new Date(yearStart);
-                        firstSunday.setDate(yearStart.getDate() - yearStart.getDay());
-                        
-                        for (let weekIdx = 0; weekIdx < 53; weekIdx++) {
-                          const weekDate = new Date(firstSunday);
-                          weekDate.setDate(firstSunday.getDate() + weekIdx * 7);
-                          
-                          const month = weekDate.getMonth();
-                          const year = weekDate.getFullYear();
-                          
-                          if (year === currentYear && month !== currentMonth) {
-                            labels.push(
-                              <div key={weekIdx} className="text-xs font-medium text-[#5c5c4a]" style={{ width: '13px' }}>
-                                {monthNames[month].substring(0, 3)}
-                              </div>
-                            );
-                            currentMonth = month;
-                          } else {
-                            labels.push(<div key={weekIdx} style={{ width: '13px' }}></div>);
-                          }
-                        }
-                        
-                        return labels;
-                      })()}
+                      {generateMonthLabels()}
                     </div>
                     
                     {/* Day grid */}
                     <div className="flex gap-1">
-                      {(() => {
-                        const weeks: JSX.Element[] = [];
-                        const yearStart = new Date(currentYear, 0, 1);
-                        const firstSunday = new Date(yearStart);
-                        firstSunday.setDate(yearStart.getDate() - yearStart.getDay());
-                        
-                        for (let weekIdx = 0; weekIdx < 53; weekIdx++) {
-                          const days: JSX.Element[] = [];
-                          
-                          for (let dayIdx = 0; dayIdx < 7; dayIdx++) {
-                            const date = new Date(firstSunday);
-                            date.setDate(firstSunday.getDate() + weekIdx * 7 + dayIdx);
-                            
-                            // Skip if not in current year
-                            if (date.getFullYear() !== currentYear) {
-                              days.push(<div key={dayIdx} className="w-3 h-3"></div>);
-                              continue;
-                            }
-                            
-                            const dateStr = date.toISOString().split('T')[0];
-                            const log = allLogsByDate.get(dateStr);
-                            const isInFiltered = logsByDate.has(dateStr);
-                            const bgColor = log?.color || '#e5e7eb';
-                            const isFiltered = log && !isInFiltered;
-                            const dayNum = date.getDate();
-                            const monthName = monthNames[date.getMonth()];
-                            
-                            days.push(
-                              <div key={dayIdx} className="group relative">
-                                <div
-                                  className={`w-3 h-3 rounded-sm cursor-pointer transition-all ${
-                                    isFiltered 
-                                      ? 'opacity-20' 
-                                      : log 
-                                      ? 'hover:ring-2 hover:ring-[#6b8e4e] hover:scale-125 hover:z-20' 
-                                      : 'border border-[#d8c4a6] hover:border-[#b8a890]'
-                                  }`}
-                                  style={{ backgroundColor: bgColor }}
-                                ></div>
-                                
-                                {/* Tooltip */}
-                                {!isFiltered && (
-                                  <div className="invisible group-hover:visible absolute z-50 left-1/2 -translate-x-1/2 bottom-full mb-2 px-3 py-2 bg-[#3e3e2d] text-white text-xs rounded-lg shadow-xl whitespace-nowrap pointer-events-none">
-                                    <div className="font-bold">{monthName} {dayNum}, {currentYear}</div>
-                                    {log ? (
-                                      <>
-                                        <div className="font-semibold mt-1" style={{ color: log.color }}>
-                                          {COLOR_LABELS[log.color]}
-                                        </div>
-                                        {log.mood && <div className="text-gray-300 mt-1 italic">"{log.mood}"</div>}
-                                        {log.tags && log.tags.length > 0 && (
-                                          <div className="mt-1 text-gray-300 text-[10px]">
-                                            {log.tags.map(tag => `#${tag}`).join(' ')}
-                                          </div>
-                                        )}
-                                      </>
-                                    ) : (
-                                      <div className="text-gray-400 mt-1">No entry</div>
-                                    )}
-                                    {/* Arrow */}
-                                    <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-px">
-                                      <div className="w-2 h-2 bg-[#3e3e2d] rotate-45"></div>
-                                    </div>
-                                  </div>
-                                )}
-                              </div>
-                            );
-                          }
-                          
-                          weeks.push(
-                            <div key={weekIdx} className="flex flex-col gap-1">
-                              {days}
-                            </div>
-                          );
-                        }
-                        
-                        return weeks;
-                      })()}
+                      {generateHeatmapWeeks()}
                     </div>
                   </div>
                 </div>
@@ -683,7 +688,7 @@ export default function YearPixelsClient({ initialLogs, currentYear }: YearPixel
                         </div>
                         
                         {log.mood && (
-                          <p className="text-[#3e3e2d] font-medium mb-2 italic">"{log.mood}"</p>
+                          <p className="text-[#3e3e2d] font-medium mb-2 italic">&quot;{log.mood}&quot;</p>
                         )}
                         
                         {log.note && (

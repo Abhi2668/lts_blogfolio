@@ -17,7 +17,6 @@ const eslintConfig = [
       "@typescript-eslint/no-unused-vars": "warn",
       "@typescript-eslint/no-explicit-any": "warn",
       "@typescript-eslint/ban-ts-comment": "warn",
-      "@typescript-eslint/prefer-const": "warn",
       "@typescript-eslint/no-inferrable-types": "warn",
 
       // React/Next.js specific
