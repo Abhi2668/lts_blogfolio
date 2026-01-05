@@ -179,7 +179,7 @@ export default function YearPixelsClient({ initialLogs, currentYear }: YearPixel
           continue;
         }
         
-        const dateStr = formatLocalDate(day);
+        const dateStr = formatLocalDate(date);
         const log = allLogsByDate.get(dateStr);
         const isInFiltered = logsByDate.has(dateStr);
         const bgColor = log?.color || '#e5e7eb';
