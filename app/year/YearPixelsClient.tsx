@@ -665,7 +665,7 @@ export default function YearPixelsClient({ initialLogs, currentYear }: YearPixel
               </div>
             ) : (
               [...filteredLogs]
-                .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                .sort((a, b) => parseLocalDate(b.date).getTime() - parseLocalDate(a.date).getTime())
                 .map((log) => (
                   <div key={log._id} className="bg-[#f4efe7] rounded-xl p-6 border border-[#d8c4a6] hover:shadow-lg transition-all">
                     <div className="flex items-start gap-4">
