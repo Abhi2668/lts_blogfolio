@@ -179,7 +179,7 @@ export default function YearPixelsClient({ initialLogs, currentYear }: YearPixel
           continue;
         }
         
-        const dateStr = date.toISOString().split('T')[0];
+        const dateStr = formatLocalDate(day);
         const log = allLogsByDate.get(dateStr);
         const isInFiltered = logsByDate.has(dateStr);
         const bgColor = log?.color || '#e5e7eb';
@@ -242,6 +242,13 @@ export default function YearPixelsClient({ initialLogs, currentYear }: YearPixel
   function parseLocalDate(dateStr: string): Date {
     const [year, month, day] = dateStr.split('-').map(Number);
     return new Date(year, month - 1, day);
+  }
+
+  function formatLocalDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   return (
@@ -466,7 +473,7 @@ export default function YearPixelsClient({ initialLogs, currentYear }: YearPixel
                     ))}
                     
                     {days.map((day) => {
-                      const dateStr = day.toISOString().split('T')[0];
+                      const dateStr = formatLocalDate(day);
                       const log = allLogsByDate.get(dateStr);
                       const isInFiltered = logsByDate.has(dateStr);
                       const bgColor = log?.color || '#ffffff';
