@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { HomeIcon, FolderIcon, UserIcon, DocumentTextIcon } from "@heroicons/react/24/outline";
+import { HomeIcon, FolderIcon, UserIcon, DocumentTextIcon, CalendarIcon } from "@heroicons/react/24/outline";
 
 export default function Header() {
   return (
@@ -32,6 +32,13 @@ export default function Header() {
           >
             <DocumentTextIcon className="w-4 h-4" />
             Blog
+          </Link>
+          <Link
+            href="/year"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-100/80 hover:bg-amber-200 dark:bg-amber-900/80 dark:hover:bg-amber-800/50 text-amber-800 dark:text-amber-200 hover:text-amber-900 dark:hover:text-amber-100 font-medium transition-all duration-200 border border-amber-200/50 dark:border-amber-700/50 hover:border-amber-300 dark:hover:border-amber-600 hover:shadow-md transform hover:-translate-y-0.5"
+          >
+            <CalendarIcon className="w-4 h-4" />
+            Year
           </Link>
         </div>
       </nav>

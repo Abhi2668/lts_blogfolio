@@ -3,13 +3,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { FaGithub, FaInstagram, FaLinkedin, FaTwitter, FaDownload, FaMapMarkerAlt, FaClock } from "react-icons/fa";
+import { FaGithub, FaInstagram, FaLinkedin, FaDownload, FaMapMarkerAlt, FaClock } from "react-icons/fa";
 import { HiOutlineCode, HiOutlineAcademicCap, HiOutlineLightBulb } from "react-icons/hi";
 
 export default function Home() {
   const [typed, setTyped] = useState("");
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
-  const words = ["Hi, I'm Abhi", "Software Engineer", "MSCS Georgia Tech Student", "Site Reliability Engineer", "Data Visualization Enthusiast", "IoT Enthusiast"];
+  const words = ["Hi, I'm Abhi", "Site Reliability Engineer", "Data Visualization Enthusiast", "IoT Enthusiast"];
   
   useEffect(() => {
     const word = words[currentWordIndex];
@@ -91,7 +91,7 @@ export default function Home() {
         {/* Enhanced Description */}
         <div className="max-w-2xl space-y-4">
           <p className="text-lg sm:text-xl text-[#5c5c4a] leading-relaxed">
-            I'm an MSCS student at Georgia Tech focused on Computing Systems and Data Visualization. 
+            I have completed my MSCS at Georgia Tech focused on Computing Systems and Data Visualization. 
             I love building fast, thoughtful tools that make people's lives better and love making the developer experience pleasant!
           </p>
           
