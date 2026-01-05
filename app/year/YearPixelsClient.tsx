@@ -239,6 +239,11 @@ export default function YearPixelsClient({ initialLogs, currentYear }: YearPixel
     return weeks;
   };
 
+  function parseLocalDate(dateStr: string): Date {
+    const [year, month, day] = dateStr.split('-').map(Number);
+    return new Date(year, month - 1, day);
+  }
+
   return (
     <div className="min-h-screen bg-white">
       <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
@@ -500,7 +505,7 @@ export default function YearPixelsClient({ initialLogs, currentYear }: YearPixel
                                       {monthNames[month]} {dayOfMonth}
                                     </div>
                                     <div className="text-xs text-[#8b7f72] mt-0.5">
-                                      {new Date(dateStr).toLocaleDateString('en-US', { weekday: 'long' })}
+                                      {parseLocalDate(dateStr).toLocaleDateString('en-US', { weekday: 'long' })}
                                     </div>
                                   </div>
                                   <div className="flex flex-col items-end gap-1">
@@ -608,7 +613,7 @@ export default function YearPixelsClient({ initialLogs, currentYear }: YearPixel
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
                 {monthNames.map((month, idx) => {
                   const monthLogs = dayLogs.filter(log => {
-                    const logDate = new Date(log.date);
+                    const logDate = parseLocalDate(log.date);
                     return logDate.getMonth() === idx;
                   });
                   const daysInMonth = new Date(currentYear, idx + 1, 0).getDate();
@@ -669,13 +674,13 @@ export default function YearPixelsClient({ initialLogs, currentYear }: YearPixel
                         style={{ backgroundColor: log.color }}
                       >
                         <span className="text-white text-2xl font-bold drop-shadow">
-                          {new Date(log.date).getDate()}
+                          {parseLocalDate(log.date).getDate()}
                         </span>
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-3 mb-2 flex-wrap">
                           <h3 className="text-lg font-bold text-[#3e3e2d]">
-                            {new Date(log.date).toLocaleDateString('en-US', { 
+                            {parseLocalDate(log.date).toLocaleDateString('en-US', { 
                               weekday: 'long',
                               month: 'long', 
                               day: 'numeric',
