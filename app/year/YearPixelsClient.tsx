@@ -2,6 +2,7 @@
 
 import { HiOutlineCalendar, HiOutlineFilter, HiOutlineChartBar, HiOutlineViewList, HiOutlineSearch } from "react-icons/hi";
 import { useState, useEffect } from "react";
+import DayLogModal from "./DayLogModal";
 
 type DayLog = {
   _id: string;
@@ -54,6 +55,10 @@ export default function YearPixelsClient({ initialLogs, currentYear }: YearPixel
   const [searchQuery, setSearchQuery] = useState('');
   const [showOnlyWithNotes, setShowOnlyWithNotes] = useState(false);
   const [showOnlyWithImages, setShowOnlyWithImages] = useState(false);
+  
+  // Modal state
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     let filtered = dayLogs.filter(log => selectedColors.includes(log.color));
@@ -128,6 +133,16 @@ export default function YearPixelsClient({ initialLogs, currentYear }: YearPixel
     setShowOnlyWithImages(false);
   };
 
+  const handleDayClick = (dateStr: string) => {
+    setSelectedDate(dateStr);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setTimeout(() => setSelectedDate(null), 200); // Clear after animation
+  };
+
   // Generate month labels for heatmap
   const generateMonthLabels = () => {
     const labels: React.ReactNode[] = [];
@@ -190,6 +205,7 @@ export default function YearPixelsClient({ initialLogs, currentYear }: YearPixel
         days.push(
           <div key={dayIdx} className="group relative">
             <div
+              onClick={() => handleDayClick(dateStr)}
               className={`w-3 h-3 rounded-sm cursor-pointer transition-all ${
                 isFiltered 
                   ? 'opacity-20' 
@@ -217,7 +233,7 @@ export default function YearPixelsClient({ initialLogs, currentYear }: YearPixel
                     )}
                   </>
                 ) : (
-                  <div className="text-gray-400 mt-1">No entry</div>
+                  <div className="text-gray-400 mt-1">No entry • Click to view</div>
                 )}
                 {/* Arrow */}
                 <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-px">
@@ -251,6 +267,8 @@ export default function YearPixelsClient({ initialLogs, currentYear }: YearPixel
     return `${year}-${month}-${day}`;
   }
 
+  const selectedLog = selectedDate ? allLogsByDate.get(selectedDate) || null : null;
+
   return (
     <div className="min-h-screen bg-white">
       <section className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
@@ -261,7 +279,7 @@ export default function YearPixelsClient({ initialLogs, currentYear }: YearPixel
           </h1>
           <p className="text-xl sm:text-2xl font-light text-[#6b8e4e] mb-2">{currentYear}</p>
           <p className="text-base text-[#5c5c4a] max-w-2xl mx-auto">
-            A visual journal of every day
+            A visual journal of every day • Click any day for details
           </p>
         </div>
 
@@ -484,9 +502,10 @@ export default function YearPixelsClient({ initialLogs, currentYear }: YearPixel
                       return (
                         <div
                           key={dateStr}
-                          className="group relative aspect-square"
+                          className="aspect-square"
                         >
                           <div
+                            onClick={() => handleDayClick(dateStr)}
                             className={`w-full h-full rounded-md transition-all duration-200 cursor-pointer flex items-center justify-center relative ${
                               isFiltered
                                 ? 'opacity-20'
@@ -495,68 +514,12 @@ export default function YearPixelsClient({ initialLogs, currentYear }: YearPixel
                                 : 'border-2 border-dashed border-[#d8c4a6] hover:border-[#b8a890]'
                             }`}
                             style={{ backgroundColor: bgColor }}
-                            title={`${dateStr}${log?.note ? `: ${log.note}` : ''}`}
+                            title={`Click to view ${dateStr}`}
                           >
                             <span className={`text-xs font-medium ${hasLog ? 'text-white drop-shadow-sm' : 'text-[#8b7f72]'}`}>
                               {dayOfMonth}
                             </span>
                           </div>
-                          
-                          {/* Hover Card */}
-                          {hasLog && (
-                            <div className="invisible group-hover:visible absolute z-30 left-full ml-3 top-0 w-72 bg-white rounded-xl shadow-2xl border border-[#d8c4a6] p-4 pointer-events-none">
-                              <div className="space-y-3">
-                                <div className="flex items-start justify-between gap-3">
-                                  <div>
-                                    <div className="font-bold text-[#3e3e2d] text-base">
-                                      {monthNames[month]} {dayOfMonth}
-                                    </div>
-                                    <div className="text-xs text-[#8b7f72] mt-0.5">
-                                      {parseLocalDate(dateStr).toLocaleDateString('en-US', { weekday: 'long' })}
-                                    </div>
-                                  </div>
-                                  <div className="flex flex-col items-end gap-1">
-                                    <div className="w-10 h-10 rounded-lg shadow-sm flex-shrink-0" style={{ backgroundColor: bgColor }}></div>
-                                    <span className="text-xs font-bold text-[#6b8e4e]">{COLOR_LABELS[log.color]}</span>
-                                  </div>
-                                </div>
-                                
-                                {log.tags && log.tags.length > 0 && (
-                                  <div className="flex flex-wrap gap-1">
-                                    {log.tags.map(tag => (
-                                      <span key={tag} className="px-2 py-0.5 bg-[#f4efe7] text-[#6b8e4e] text-xs rounded-full">
-                                        {tag}
-                                      </span>
-                                    ))}
-                                  </div>
-                                )}
-                                
-                                {log.mood && (
-                                  <div className="pt-2 border-t border-[#f4efe7]">
-                                    <div className="text-xs font-semibold text-[#6b8e4e] uppercase tracking-wide mb-1">Mood</div>
-                                    <p className="text-sm text-[#3e3e2d] font-medium">{log.mood}</p>
-                                  </div>
-                                )}
-                                
-                                {log.note && (
-                                  <div className="pt-2 border-t border-[#f4efe7]">
-                                    <div className="text-xs font-semibold text-[#6b8e4e] uppercase tracking-wide mb-1">Note</div>
-                                    <p className="text-sm text-[#5c5c4a] leading-relaxed">{log.note}</p>
-                                  </div>
-                                )}
-                                
-                                {log.image?.asset?.url && (
-                                  <div className="pt-2 border-t border-[#f4efe7]">
-                                    <img
-                                      src={log.image.asset.url}
-                                      alt=""
-                                      className="w-full h-40 object-cover rounded-lg"
-                                    />
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                          )}
                         </div>
                       );
                     })}
@@ -674,7 +637,11 @@ export default function YearPixelsClient({ initialLogs, currentYear }: YearPixel
               [...filteredLogs]
                 .sort((a, b) => parseLocalDate(b.date).getTime() - parseLocalDate(a.date).getTime())
                 .map((log) => (
-                  <div key={log._id} className="bg-[#f4efe7] rounded-xl p-6 border border-[#d8c4a6] hover:shadow-lg transition-all">
+                  <div 
+                    key={log._id} 
+                    onClick={() => handleDayClick(log.date)}
+                    className="bg-[#f4efe7] rounded-xl p-6 border border-[#d8c4a6] hover:shadow-lg transition-all cursor-pointer"
+                  >
                     <div className="flex items-start gap-4">
                       <div
                         className="w-20 h-20 rounded-lg flex-shrink-0 shadow-md flex items-center justify-center"
@@ -704,7 +671,7 @@ export default function YearPixelsClient({ initialLogs, currentYear }: YearPixel
                         )}
                         
                         {log.note && (
-                          <p className="text-[#5c5c4a] mb-3 leading-relaxed">{log.note}</p>
+                          <p className="text-[#5c5c4a] mb-3 leading-relaxed line-clamp-2">{log.note}</p>
                         )}
                         
                         {log.tags && log.tags.length > 0 && (
@@ -732,6 +699,15 @@ export default function YearPixelsClient({ initialLogs, currentYear }: YearPixel
           </div>
         )}
       </section>
+
+      {/* Modal */}
+      <DayLogModal
+        log={selectedLog}
+        date={selectedDate || ''}
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        colorLabel={selectedLog ? COLOR_LABELS[selectedLog.color] : ''}
+      />
     </div>
   );
 }
